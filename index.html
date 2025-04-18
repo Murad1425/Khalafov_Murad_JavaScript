@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Automation Task</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .task-section {
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #0066cc;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0055aa;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-left: 4px solid #0066cc;
+            border-radius: 4px;
+        }
+        #taskTabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #eee;
+            flex: 1;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        .tab.active {
+            background-color: #0066cc;
+            color: white;
+        }
+        .task-content {
+            display: none;
+        }
+        .task-content.active {
+            display: block;
+        }
+        pre {
+            background-color: #f7f7f7;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QA Automation Task</h1>
+        
+        <div id="taskTabs">
+            <div class="tab active" onclick="showTask('task1')">Task 1: Input Processing</div>
+            <div class="tab" onclick="showTask('task2')">Task 2: Bracket Validation</div>
+        </div>
+        
+        <div id="task1" class="task-content active">
+            <h2>Algorithm Implementation</h2>
+            
+            <div class="input-group">
+                <label for="number">Enter a number:</label>
+                <input type="number" id="number" placeholder="e.g., 8">
+            </div>
+            
+            <div class="input-group">
+                <label for="name">Enter a name:</label>
+                <input type="text" id="name" placeholder="e.g., John">
+            </div>
+            
+            <div class="input-group">
+                <label for="array">Enter array elements (comma separated):</label>
+                <input type="text" id="array" placeholder="e.g., 1,2,3,4,5,6,9,12">
+            </div>
+            
+            <button onclick="processInputs()">Process Inputs</button>
+            
+            <div id="inputResults" class="result-box" style="display:none;">
+                <h3>Results:</h3>
+                <div id="numberResult"></div>
+                <div id="nameResult"></div>
+                <div id="arrayResult"></div>
+            </div>
+        </div>
+        
+        <div id="task2" class="task-content">
+            <h2>Bracket Sequence Validation</h2>
+            
+            <div class="input-group">
+                <label for="brackets">Enter a bracket sequence:</label>
+                <input type="text" id="brackets" placeholder="e.g., [((()))()(())]]" value="[((()))()(())]]">
+            </div>
+            
+            <button onclick="validateBrackets()">Validate Sequence</button>
+            
+            <div id="bracketResults" class="result-box" style="display:none;">
+                <h3>Results:</h3>
+                <div id="isValid"></div>
+                <div id="fixSuggestion"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Task 1: Algorithm implementation
+        function processInputs() {
+            const number = parseFloat(document.getElementById('number').value);
+            const name = document.getElementById('name').value;
+            const arrayInput = document.getElementById('array').value;
+            const array = arrayInput.split(',').map(item => parseInt(item.trim()));
+            
+            let numberResult = '';
+            let nameResult = '';
+            
+            // Task 1: Check if number is greater than 7
+            if (number > 7) {
+                numberResult = "Hello";
+            }
+            
+            // Task 2: Check if name matches "John"
+            if (name === "John") {
+                nameResult = "Hello, John";
+            } else {
+                nameResult = "There is no such name";
+            }
+            
+            // Task 3: Find multiples of 3 in the array
+            const multiplesOfThree = array.filter(num => num % 3 === 0);
+            
+            // Display results
+            document.getElementById('numberResult').innerHTML = numberResult ? numberResult : "Number is not greater than 7";
+            document.getElementById('nameResult').innerHTML = nameResult;
+            document.getElementById('arrayResult').innerHTML = "Multiples of 3 in the array: " + multiplesOfThree.join(', ');
+            document.getElementById('inputResults').style.display = 'block';
+        }
+        
+        // Task 2: Bracket sequence validation
+        function validateBrackets() {
+            const sequence = document.getElementById('brackets').value;
+            const isValid = validateBracketSequence(sequence);
+            
+            document.getElementById('isValid').innerHTML = "Is the sequence valid? " + (isValid ? "Yes" : "No");
+            
+            if (!isValid) {
+                let suggestion = "To make it valid, ensure each opening bracket has a matching closing bracket in the correct order.";
+                
+                if (sequence === "[((()))()(())]]") {
+                    suggestion += "<br><br>For the given sequence [((()))()(())]], you should either:<br>1. Remove the extra ']' at the end<br>2. Add a '[' at the beginning";
+                }
+                
+                document.getElementById('fixSuggestion').innerHTML = suggestion;
+            } else {
+                document.getElementById('fixSuggestion').innerHTML = "";
+            }
+            
+            document.getElementById('bracketResults').style.display = 'block';
+        }
+        
+        function validateBracketSequence(sequence) {
+            const stack = [];
+            const bracketPairs = {
+                '(': ')',
+                '[': ']',
+                '{': '}'
+            };
+            
+            for (let i = 0; i < sequence.length; i++) {
+                const char = sequence[i];
+                
+                // If opening bracket, push to stack
+                if (char === '(' || char === '[' || char === '{') {
+                    stack.push(char);
+                } 
+                // If closing bracket
+                else if (char === ')' || char === ']' || char === '}') {
+                    // If stack is empty, sequence is invalid
+                    if (stack.length === 0) {
+                        return false;
+                    }
+                    
+                    const lastBracket = stack.pop();
+                    // If brackets don't match, sequence is invalid
+                    if (bracketPairs[lastBracket] !== char) {
+                        return false;
+                    }
+                }
+            }
+            
+            // If stack still has brackets, sequence is invalid
+            return stack.length === 0;
+        }
+        
+        // Tab switching functionality
+        function showTask(taskId) {
+            // Hide all task contents
+            const taskContents = document.getElementsByClassName('task-content');
+            for (let i = 0; i < taskContents.length; i++) {
+                taskContents[i].classList.remove('active');
+            }
+            
+            // Deactivate all tabs
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Show selected task and activate its tab
+            document.getElementById(taskId).classList.add('active');
+            document.querySelector(`[onclick="showTask('${taskId}')"]`).classList.add('active');
+        }
+    </script>
+</body>
+</html>
